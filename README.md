@@ -1,0 +1,1 @@
+# Janela-Informacoes-BTC
