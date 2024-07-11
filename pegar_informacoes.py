@@ -7,7 +7,7 @@ def preco_btc():
         return preco['bitcoin']['usd']
     
     except:
-        return "error"
+        return "Indisponivel"
 
 
 def preco_ult_200():
@@ -18,7 +18,7 @@ def preco_ult_200():
         return precos
     
     except:
-        return "error"
+        return "Indisponivel"
 
 
 def calcular_multiplo_de_mayer():
@@ -27,7 +27,50 @@ def calcular_multiplo_de_mayer():
         precos_ultimos_200_dias = preco_ult_200()
         media_ult_200 = sum(precos_ultimos_200_dias) / len(precos_ultimos_200_dias)
         multiplo_de_mayer = preco_atual / media_ult_200
-        return multiplo_de_mayer
+        return str(multiplo_de_mayer)[:4]
     
     except:
-        return "error"
+        return "Indisponivel"
+
+
+def taxas_onchain():
+    try:
+        api_mempool = requests.get('https://mempool.space/api/v1/fees/recommended')
+        if api_mempool.status_code == 200:
+            taxas = api_mempool.json()
+            return taxas
+        else:
+            return "Indisponivel"
+    except:
+        return "Indisponivel"
+    
+
+def preco_btc_formatado():
+    try:
+        preco_formatado = '${:,.2f}'.format(preco_btc())
+        return preco_formatado
+    
+    except:
+        return 'Indisponivel'
+    
+
+def taxas_onchain_formatado():
+    try:
+        prioridade_alta = str(taxas_onchain()['fastestFee']) + ' sat/vB'
+        prioridade_media = str(taxas_onchain()['halfHourFee']) + ' sat/vB'
+        prioridade_baixa = str(taxas_onchain()['hourFee']) + ' sat/vB'
+
+        taxas_formatado = {
+            'fastestFee': prioridade_alta,
+            'halfHourFee': prioridade_media,
+            'hourFee': prioridade_baixa
+        }
+        return taxas_formatado
+
+    except:
+        falha = {
+        'fastestFee': 'Indisponivel',
+        'halfHourFee': 'Indisponivel',
+        'hourFee': 'Indisponivel'
+    }
+        return falha

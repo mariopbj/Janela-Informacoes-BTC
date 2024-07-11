@@ -28,9 +28,11 @@ class MyWidget(Gtk.Window):
                 font-weight: bold;
             }
             label.title {
-                font-size: 30px;
                 font-weight: bold;
                 color: #b6ff00;
+            }
+            label.title-btc {
+                font-size: 36px;
             }
         """)
         Gtk.StyleContext.add_provider_for_screen(screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -39,42 +41,80 @@ class MyWidget(Gtk.Window):
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
         vbox.set_border_width(20)
         
-        # Título
-        title = Gtk.Label(label="BTC")
-        title.get_style_context().add_class("title")
-        title.set_justify(Gtk.Justification.CENTER)
-        vbox.pack_start(title, False, False, 0)
+        # Título Bitcoin
+        title_btc = Gtk.Label(label="BTC")
+        title_btc.get_style_context().add_class("title")
+        title_btc.get_style_context().add_class("title-btc")
+        title_btc.set_justify(Gtk.Justification.CENTER)
+        vbox.pack_start(title_btc, False, False, 0)
         
         # Espaçamento entre o título e os parágrafos
-        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        vbox.pack_start(separator, False, False, 10)
+        separator_btc = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        vbox.pack_start(separator_btc, False, False, 10)
         
-        # Caixa vertical para os parágrafos
-        info_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        # Caixa vertical para os parágrafos do Bitcoin
+        info_box_btc = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
         
-        # Parágrafos
-        labels = [
-            ("Valor:", '${:,.2f}'.format(pegar_informacoes.preco_btc())),
-            ("Multiplo de Mayer:", f"{str(pegar_informacoes.calcular_multiplo_de_mayer())[:4]}"),
-            ("Taxa On-Chain:", "Indisponivel"),
+        # Parágrafos do Bitcoin
+        labels_btc = [
+            ("Valor:", pegar_informacoes.preco_btc_formatado()),
+            ("Multiplo de Mayer:", pegar_informacoes.calcular_multiplo_de_mayer()),
         ]
         
-        for left_text, right_text in labels:
-            hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        for left_text, right_text in labels_btc:
+            hbox_btc = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
             
-            left_label = Gtk.Label(label=left_text)
-            left_label.set_justify(Gtk.Justification.LEFT)
-            left_label.set_xalign(0)
+            left_label_btc = Gtk.Label(label=left_text)
+            left_label_btc.set_justify(Gtk.Justification.LEFT)
+            left_label_btc.set_xalign(0)
             
-            right_label = Gtk.Label(label=right_text)
-            right_label.set_justify(Gtk.Justification.RIGHT)
-            right_label.set_xalign(1)
+            right_label_btc = Gtk.Label(label=right_text)
+            right_label_btc.set_justify(Gtk.Justification.RIGHT)
+            right_label_btc.set_xalign(1)
             
-            hbox.pack_start(left_label, True, True, 0)
-            hbox.pack_start(right_label, True, True, 0)
-            info_box.pack_start(hbox, False, False, 0)
+            hbox_btc.pack_start(left_label_btc, True, True, 0)
+            hbox_btc.pack_start(right_label_btc, True, True, 0)
+            info_box_btc.pack_start(hbox_btc, False, False, 0)
         
-        vbox.pack_start(info_box, False, False, 0)
+        vbox.pack_start(info_box_btc, False, False, 0)
+        
+        # Espaçamento entre as seções
+        separator_between = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        vbox.pack_start(separator_between, False, False, 10)
+        
+        # Título Taxas On-Chain
+        title_on_chain = Gtk.Label(label="Taxas On-Chain")
+        title_on_chain.get_style_context().add_class("title")
+        title_on_chain.set_justify(Gtk.Justification.CENTER)
+        vbox.pack_start(title_on_chain, False, False, 0)
+        
+        # Caixa vertical para os parágrafos das Taxas On-Chain
+        info_box_on_chain = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        
+        # Parágrafos das Taxas On-Chain
+        labels_on_chain = [
+            ("Prioridade Alta:", pegar_informacoes.taxas_onchain_formatado()['fastestFee']),
+            ("Prioridade Média:", pegar_informacoes.taxas_onchain_formatado()['halfHourFee']),
+            ("Prioridade Baixa:", pegar_informacoes.taxas_onchain_formatado()['hourFee']),
+        ]
+        
+        for left_text, right_text in labels_on_chain:
+            hbox_on_chain = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            
+            left_label_on_chain = Gtk.Label(label=left_text)
+            left_label_on_chain.set_justify(Gtk.Justification.LEFT)
+            left_label_on_chain.set_xalign(0)
+            
+            right_label_on_chain = Gtk.Label(label=right_text)
+            right_label_on_chain.set_justify(Gtk.Justification.RIGHT)
+            right_label_on_chain.set_xalign(1)
+            
+            hbox_on_chain.pack_start(left_label_on_chain, True, True, 0)
+            hbox_on_chain.pack_start(right_label_on_chain, True, True, 0)
+            info_box_on_chain.pack_start(hbox_on_chain, False, False, 0)
+        
+        vbox.pack_start(info_box_on_chain, False, False, 0)
+        
         self.add(vbox)
         
         # Para mover a janela, conectamos o evento de clique do mouse
