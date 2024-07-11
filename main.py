@@ -1,6 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
+import pegar_informacoes
 import time
 
 time.sleep(5)
@@ -53,8 +54,8 @@ class MyWidget(Gtk.Window):
         
         # Parágrafos
         labels = [
-            ("Valor:", "Indisponivel"),
-            ("Multiplo de Mayer:", "Indisponivel"),
+            ("Valor:", '${:,.2f}'.format(pegar_informacoes.preco_btc())),
+            ("Multiplo de Mayer:", f"{str(pegar_informacoes.calcular_multiplo_de_mayer())[:4]}"),
             ("Taxa On-Chain:", "Indisponivel"),
         ]
         
